@@ -76,6 +76,10 @@ static void skipSpace( const char * buf,
     assert( ( buf != NULL ) && ( start != NULL ) && ( max > 0U ) );
 
     for( i = *start; i < max; i++ )
+      __CPROVER_loop_invariant(
+          ((*start > max) && (i == *start)) ||
+          ((*start <= i) && (i <= max))
+      )
     {
         if( !isspace_( buf[ i ] ) )
         {
@@ -100,6 +104,14 @@ static size_t countHighBits( uint8_t c )
     size_t i = 0;
 
     while( ( n & 0x80U ) != 0U )
+      __CPROVER_loop_invariant(
+        (0U <= i) && (i <= 8U) &&
+        // the following check could just be (n == c << i)
+        // but we have to explicitly "contain" all possible overflows
+        // for CBMC's --conversion-check to be happy
+        (n == (c & (0xFF >> i)) << i) &&
+        (((c >> (8U - i)) + 1U) == (1U << i))
+      )
     {
         i++;
         n = ( n & 0x7FU ) << 1U;
@@ -208,6 +220,11 @@ static bool skipUTF8MultiByte( const char * buf,
         /* The bit count is 1 greater than the number of bytes,
          * e.g., when j is 2, we skip one more byte. */
         for( j = bitCount - 1U; j > 0U; j-- )
+          __CPROVER_loop_invariant(
+              (0 <= j) && (j <= bitCount - 1) &&
+              (*start <= i) && (i <= max) &&
+              ((i == max) ==> (j > 0))
+          )
         {
             i++;
 
@@ -335,11 +352,17 @@ static bool skipOneHexEscape( const char * buf,
 
     i = *start;
 #define HEX_ESCAPE_LENGTH    ( 6U )   /* e.g., \u1234 */
+    assert(i < SIZE_MAX - 6);
     end = i + HEX_ESCAPE_LENGTH;
 
     if( ( end < max ) && ( buf[ i ] == '\\' ) && ( buf[ i + 1U ] == 'u' ) )
     {
         for( i += 2U; i < end; i++ )
+        __CPROVER_loop_invariant(
+            ((((*start) + 2 > end) && (i == (*start) + 2)) ||
+             (((*start) + 2 <= i) && (i <= end))) &&
+             (0 <= value) && (value < (1 << (4 * (i - (2 + *start)))))
+        )
         {
             uint8_t n = hexToInt( buf[ i ] );
 
@@ -517,6 +540,9 @@ static bool skipString( const char * buf,
         i++;
 
         while( i < max )
+          __CPROVER_loop_invariant(
+            (*start <= i) && (i <= max)
+          )
         {
             if( buf[ i ] == '"' )
             {
@@ -575,6 +601,7 @@ static bool strnEq( const char * a,
     assert( ( a != NULL ) && ( b != NULL ) );
 
     for( i = 0; i < n; i++ )
+      __CPROVER_loop_invariant(0 <= i && i <= n)
     {
         if( a[ i ] != b[ i ] )
         {
@@ -678,6 +705,11 @@ static bool skipDigits( const char * buf,
     saveStart = *start;
 
     for( i = *start; i < max; i++ )
+      __CPROVER_loop_invariant(
+          (((*start > max) && (i == *start)) || ((*start <= i) && (i <= max))) &&
+          (-1 <= value) &&
+          (value <= MAX_INDEX_VALUE)
+      )
     {
         if( !isdigit_( buf[ i ] ) )
         {
@@ -917,6 +949,9 @@ static void skipArrayScalars( const char * buf,
     i = *start;
 
     while( i < max )
+    __CPROVER_loop_invariant(
+        ((*start > max) && (i == *start)) || ((*start <= i) && (i <= max))
+    )
     {
         if( skipAnyScalar( buf, &i, max ) != true )
         {
@@ -959,6 +994,9 @@ static void skipObjectScalars( const char * buf,
     i = *start;
 
     while( i < max )
+    __CPROVER_loop_invariant(
+        ((*start > max) && (i == *start)) || ((*start <= i) && (i <= max))
+    )
     {
         if( skipString( buf, &i, max ) != true )
         {
@@ -1055,6 +1093,22 @@ static JSONStatus_t skipCollection( const char * buf,
     i = *start;
 
     while( i < max )
+    __CPROVER_loop_invariant(
+        (((*start > max) && (i == *start)) || ((*start <= i) && (i <= max)))
+        &&
+        (-1 <= depth) && (depth <= JSON_MAX_DEPTH)
+        &&
+        ((i < max && (buf[i] == '{' || buf[i] == '[')) ==> depth < JSON_MAX_DEPTH)
+        &&
+        (depth == JSON_MAX_DEPTH ==> ret == JSONMaxDepthExceeded)
+        &&
+        __CPROVER_forall {
+            int k;
+            (0 <= k && k < JSON_MAX_DEPTH) ==> (
+                (k <= depth) ==> isOpenBracket_(stack[k])
+            )
+        }
+    )
     {
         c = buf[ i ];
         i++;

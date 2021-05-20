@@ -10,17 +10,18 @@ CBMC_MAX_BUFSIZE=8
 
 DEFINES += -DJSON_MAX_DEPTH="( $(CBMC_MAX_BUFSIZE) - 2 )"
 
-REMOVE_FUNCTION_BODY += strnEq
-UNWINDSET += skipCollection.0:$(CBMC_MAX_BUFSIZE)
-UNWINDSET += skipArrayScalars.0:$(CBMC_MAX_BUFSIZE)
-UNWINDSET += skipObjectScalars.0:$(CBMC_MAX_BUFSIZE)
+# REMOVE_FUNCTION_BODY += strnEq
 
-PROOF_SOURCES += $(PROOF_STUB)/skipGeneric.c
-PROOF_SOURCES += $(PROOF_STUB)/skipAnyLiteral.c
-PROOF_SOURCES += $(PROOF_STUB)/skipNumber.c
-PROOF_SOURCES += $(PROOF_STUB)/skipSpace.c
-PROOF_SOURCES += $(PROOF_STUB)/skipSpaceAndComma.c
-PROOF_SOURCES += $(PROOF_STUB)/skipString.c
+# UNWINDSET += skipCollection.0:$(CBMC_MAX_BUFSIZE)
+# UNWINDSET += skipArrayScalars.0:$(CBMC_MAX_BUFSIZE)
+# UNWINDSET += skipObjectScalars.0:$(CBMC_MAX_BUFSIZE)
+
+# PROOF_SOURCES += $(PROOF_STUB)/skipGeneric.c
+# PROOF_SOURCES += $(PROOF_STUB)/skipAnyLiteral.c
+# PROOF_SOURCES += $(PROOF_STUB)/skipNumber.c
+# PROOF_SOURCES += $(PROOF_STUB)/skipSpace.c
+# PROOF_SOURCES += $(PROOF_STUB)/skipSpaceAndComma.c
+# PROOF_SOURCES += $(PROOF_STUB)/skipString.c
 
 include ../Makefile-json.common
 

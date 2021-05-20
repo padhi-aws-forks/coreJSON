@@ -6,9 +6,9 @@ PROOF_UID=skipSpace
 
 # This value was experimentally chosen to provide 100% coverage
 # without tripping unwinding assertions and without exhausting memory.
-CBMC_MAX_BUFSIZE=10
+#CBMC_MAX_BUFSIZE=10
 
-UNWINDSET += skipSpace.0:$(CBMC_MAX_BUFSIZE)
+#UNWINDSET += skipSpace.0:$(CBMC_MAX_BUFSIZE)
 
 include ../Makefile-json.common
 

@@ -38,11 +38,14 @@ void harness()
     __CPROVER_assume( max > 0 );
 
     /* max is the buffer length which must not exceed unwindings. */
-    __CPROVER_assume( max < CBMC_MAX_BUFSIZE );
+    //__CPROVER_assume( max < CBMC_MAX_BUFSIZE );
 
     /* buf must not be NULL */
     buf = malloc( max );
     __CPROVER_assume( buf != NULL );
+
+    start = __CPROVER_max_malloc_size;
+    assert( max > SIZE_MAX - 6);
 
     ret = skipEscape( buf, &start, max );
 

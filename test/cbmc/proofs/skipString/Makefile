@@ -6,13 +6,13 @@ PROOF_UID=skipString
 
 # This value was experimentally chosen to provide 100% coverage
 # without tripping unwinding assertions and without exhausting memory.
-CBMC_MAX_BUFSIZE=14
+# CBMC_MAX_BUFSIZE=14
 
-UNWINDSET += skipString.0:$(CBMC_MAX_BUFSIZE)
+# UNWINDSET += skipString.0:$(CBMC_MAX_BUFSIZE)
 
-PROOF_SOURCES += $(PROOF_STUB)/skipGeneric.c
-PROOF_SOURCES += $(PROOF_STUB)/skipEscape.c
-PROOF_SOURCES += $(PROOF_STUB)/skipUTF8.c
+# PROOF_SOURCES += $(PROOF_STUB)/skipGeneric.c
+# PROOF_SOURCES += $(PROOF_STUB)/skipEscape.c
+# PROOF_SOURCES += $(PROOF_STUB)/skipUTF8.c
 
 include ../Makefile-json.common
 
