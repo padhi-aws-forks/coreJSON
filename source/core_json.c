@@ -106,9 +106,10 @@ static size_t countHighBits( uint8_t c )
     while( ( n & 0x80U ) != 0U )
       __CPROVER_loop_invariant(
         (0U <= i) && (i <= 8U) &&
-        // the following check could just be (n == c << i)
-        // but we have to explicitly "contain" all possible overflows
-        // for CBMC's --conversion-check to be happy
+        /* the following check could just be (n == c << i)
+           but we have to explicitly "contain" all possible overflows
+           for CBMC's --conversion-check to be happy
+         */
         (n == (c & (0xFF >> i)) << i) &&
         (((c >> (8U - i)) + 1U) == (1U << i))
       )

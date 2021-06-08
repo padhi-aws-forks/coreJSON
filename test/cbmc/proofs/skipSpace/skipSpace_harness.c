@@ -36,8 +36,9 @@ void harness()
     /* max is the buffer length which must be nonzero for non-API functions. */
     __CPROVER_assume( max > 0 );
 
-    /* max is the buffer length which must not exceed unwindings. */
-    //__CPROVER_assume( max < CBMC_MAX_BUFSIZE );
+    /* max is the buffer length which must not exceed unwindings.
+    __CPROVER_assume( max < CBMC_MAX_BUFSIZE );
+    */
 
     /* buf must not be NULL */
     buf = malloc( max );
