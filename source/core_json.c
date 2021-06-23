@@ -80,6 +80,7 @@ static void skipSpace( const char * buf,
           ((*start > max) && (i == *start)) ||
           ((*start <= i) && (i <= max))
       )
+      __CPROVER_decreases((*start > max ? *start : max) - i)
     {
         if( !isspace_( buf[ i ] ) )
         {
@@ -113,6 +114,7 @@ static size_t countHighBits( uint8_t c )
         (n == (c & (0xFF >> i)) << i) &&
         (((c >> (8U - i)) + 1U) == (1U << i))
       )
+      __CPROVER_decreases(8U - i)
     {
         i++;
         n = ( n & 0x7FU ) << 1U;
@@ -226,6 +228,7 @@ static bool skipUTF8MultiByte( const char * buf,
               (*start <= i) && (i <= max) &&
               ((i == max) ==> (j > 0))
           )
+          __CPROVER_decreases(j)
         {
             i++;
 
@@ -364,6 +367,7 @@ static bool skipOneHexEscape( const char * buf,
              (((*start) + 2 <= i) && (i <= end))) &&
              (0 <= value) && (value < (1 << (4 * (i - (2 + *start)))))
         )
+        __CPROVER_decreases(end - i)
         {
             uint8_t n = hexToInt( buf[ i ] );
 
@@ -536,7 +540,7 @@ static bool skipString( const char * buf,
 
     i = *start;
 
-    if( ( i < max ) && ( buf[ i ] == '"' ) )
+    if( ( i < max ) && ( buf[ i ] == '"' ) ) 
     {
         i++;
 
@@ -544,6 +548,7 @@ static bool skipString( const char * buf,
           __CPROVER_loop_invariant(
             (*start <= i) && (i <= max)
           )
+          __CPROVER_decreases(max - i)
         {
             if( buf[ i ] == '"' )
             {
@@ -603,6 +608,7 @@ static bool strnEq( const char * a,
 
     for( i = 0; i < n; i++ )
       __CPROVER_loop_invariant(0 <= i && i <= n)
+      __CPROVER_decreases(n - i)
     {
         if( a[ i ] != b[ i ] )
         {
@@ -711,6 +717,7 @@ static bool skipDigits( const char * buf,
           (-1 <= value) &&
           (value <= MAX_INDEX_VALUE)
       )
+      __CPROVER_decreases((*start > max ? *start : max) - i)
     {
         if( !isdigit_( buf[ i ] ) )
         {
@@ -953,6 +960,7 @@ static void skipArrayScalars( const char * buf,
     __CPROVER_loop_invariant(
         ((*start > max) && (i == *start)) || ((*start <= i) && (i <= max))
     )
+    __CPROVER_decreases((*start > max ? *start : max) - i)
     {
         if( skipAnyScalar( buf, &i, max ) != true )
         {
@@ -992,12 +1000,23 @@ static void skipObjectScalars( const char * buf,
 
     assert( ( buf != NULL ) && ( start != NULL ) && ( max > 0U ) );
 
+    /* This records the original value of *start. We need to store its original
+       value because *start is modified inside the loop, and we want to refer 
+       to the original value in a loop invariant. */
+    size_t old_start = *start;
+
     i = *start;
 
     while( i < max )
     __CPROVER_loop_invariant(
-        ((*start > max) && (i == *start)) || ((*start <= i) && (i <= max))
+        /* This was the original loop invariant. */
+        /*((*start > max) && (i == *start)) || ((*start <= i) && (i <= max)) */
+
+        /* This loop invariant, which is stronger than the original loop invariant
+           is necessary for the termination proof of skipCollection. */
+        ((old_start > max) && (i == old_start)) || ((old_start <= *start) && (*start <= i) && (i <= max))
     )
+    __CPROVER_decreases((old_start > max ? old_start : max) - i)
     {
         if( skipString( buf, &i, max ) != true )
         {
@@ -1099,7 +1118,7 @@ static JSONStatus_t skipCollection( const char * buf,
         &&
         (-1 <= depth) && (depth <= JSON_MAX_DEPTH)
         &&
-        ((i < max && (buf[i] == '{' || buf[i] == '[')) ==> depth < JSON_MAX_DEPTH)
+        ((i < max && (buf[i] == '{' || buf[i] == '[' || buf[i] == '}' || buf[i] == ']')) ==> depth < JSON_MAX_DEPTH)
         &&
         (depth == JSON_MAX_DEPTH ==> ret == JSONMaxDepthExceeded)
         &&
@@ -1109,7 +1128,11 @@ static JSONStatus_t skipCollection( const char * buf,
                 (k <= depth) ==> isOpenBracket_(stack[k])
             )
         }
+        &&
+        /* The following line is necessary for proving lines 49 and 53 in skipCollection_harness.c. */
+        skipCollectionEnum( ret ) && (ret == JSONSuccess ==> i <= max)
     )
+    __CPROVER_decreases((*start > max ? *start : max) - i)
     {
         c = buf[ i ];
         i++;

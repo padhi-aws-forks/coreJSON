@@ -1,0 +1,245 @@
+Reading GOTO program from 'gotos/skipSpace_harness.goto'
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+__CPROVER__start /* __CPROVER__start */
+        // 110 no location
+        // Labels: __CPROVER_HIDE
+        __CPROVER_initialize();
+        // 111 file /local/home/lopha/Repos/coreJSON_unbounded/test/cbmc/proofs/skipSpace/skipSpace_harness.c line 31
+        harness();
+        // 112 no location
+        END_FUNCTION
+
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+__CPROVER_initialize /* __CPROVER_initialize */
+        // 91 file <built-in-additions> line 20
+        // Labels: __CPROVER_HIDE
+        __CPROVER_alloca_object = NULL;
+        // 92 file <built-in-additions> line 14
+        __CPROVER_dead_object = NULL;
+        // 93 file <built-in-additions> line 13
+        __CPROVER_deallocated = NULL;
+        // 94 file <built-in-additions> line 23
+        __CPROVER_malloc_failure_mode_assert_then_assume = 2;
+        // 95 file <built-in-additions> line 22
+        __CPROVER_malloc_failure_mode_return_null = 1;
+        // 96 file <built-in-additions> line 17
+        __CPROVER_malloc_is_new_array = 0 != 0;
+        // 97 file <built-in-additions> line 15
+        __CPROVER_malloc_object = NULL;
+        // 98 file <built-in-additions> line 16
+        __CPROVER_malloc_size = 0ul;
+        // 99 file <built-in-additions> line 24
+        __CPROVER_max_malloc_size = (__CPROVER_size_t)36028797018963968l;
+        // 100 file <built-in-additions> line 18
+        __CPROVER_memory_leak = NULL;
+        // 101 file <built-in-additions> line 8
+        __CPROVER_next_thread_id = (unsigned long int)0;
+        // 102 file <built-in-additions> line 11
+        __CPROVER_next_thread_key = (unsigned long int)0;
+        // 103 file <built-in-additions> line 38
+        __CPROVER_pipe_count = (unsigned int)0;
+        // 104 file <built-in-additions> line 29
+        __CPROVER_rounding_mode = 0;
+        // 105 file <built-in-additions> line 6
+        __CPROVER_thread_id = (unsigned long int)0;
+        // 106 file <built-in-additions> line 10
+        __CPROVER_thread_key_dtors = ARRAY_OF(((void (*)(void *))NULL));
+        // 107 file <built-in-additions> line 9
+        __CPROVER_thread_keys = ARRAY_OF(NULL);
+        // 108 file <built-in-additions> line 7
+        __CPROVER_threads_exited = ARRAY_OF(FALSE);
+        // 109 no location
+        END_FUNCTION
+
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+harness /* harness */
+        // 72 file /local/home/lopha/Repos/coreJSON_unbounded/test/cbmc/proofs/skipSpace/skipSpace_harness.c line 33 function harness
+        char *buf;
+        // 73 file /local/home/lopha/Repos/coreJSON_unbounded/test/cbmc/proofs/skipSpace/skipSpace_harness.c line 34 function harness
+        size_t start;
+        // 74 file /local/home/lopha/Repos/coreJSON_unbounded/test/cbmc/proofs/skipSpace/skipSpace_harness.c line 34 function harness
+        size_t saveStart;
+        // 75 file /local/home/lopha/Repos/coreJSON_unbounded/test/cbmc/proofs/skipSpace/skipSpace_harness.c line 34 function harness
+        saveStart = start;
+        // 76 file /local/home/lopha/Repos/coreJSON_unbounded/test/cbmc/proofs/skipSpace/skipSpace_harness.c line 34 function harness
+        size_t max;
+        // 77 file /local/home/lopha/Repos/coreJSON_unbounded/test/cbmc/proofs/skipSpace/skipSpace_harness.c line 37 function harness
+        ASSUME max > (unsigned long int)0
+        // 78 file /local/home/lopha/Repos/coreJSON_unbounded/test/cbmc/proofs/skipSpace/skipSpace_harness.c line 44 function harness
+        void *return_value_malloc;
+        // 79 file /local/home/lopha/Repos/coreJSON_unbounded/test/cbmc/proofs/skipSpace/skipSpace_harness.c line 44 function harness
+        return_value_malloc=malloc(max);
+        // 80 file /local/home/lopha/Repos/coreJSON_unbounded/test/cbmc/proofs/skipSpace/skipSpace_harness.c line 44 function harness
+        buf = (char *)return_value_malloc;
+        // 81 file /local/home/lopha/Repos/coreJSON_unbounded/test/cbmc/proofs/skipSpace/skipSpace_harness.c line 45 function harness
+        ASSUME buf != ((char *)NULL)
+        // 82 file /local/home/lopha/Repos/coreJSON_unbounded/test/cbmc/proofs/skipSpace/skipSpace_harness.c line 47 function harness
+        skipSpace(buf, &start, max);
+        // 83 file /local/home/lopha/Repos/coreJSON_unbounded/test/cbmc/proofs/skipSpace/skipSpace_harness.c line 49 function harness
+        IF !(saveStart != start) THEN GOTO 1
+        // 84 file /local/home/lopha/Repos/coreJSON_unbounded/test/cbmc/proofs/skipSpace/skipSpace_harness.c line 51 function harness
+        ASSERT start <= max // The buffer start index does not exceed the buffer length.
+        // 85 file /local/home/lopha/Repos/coreJSON_unbounded/test/cbmc/proofs/skipSpace/skipSpace_harness.c line 54 function harness
+     1: dead return_value_malloc;
+        // 86 file /local/home/lopha/Repos/coreJSON_unbounded/test/cbmc/proofs/skipSpace/skipSpace_harness.c line 54 function harness
+        dead max;
+        // 87 file /local/home/lopha/Repos/coreJSON_unbounded/test/cbmc/proofs/skipSpace/skipSpace_harness.c line 54 function harness
+        dead saveStart;
+        // 88 file /local/home/lopha/Repos/coreJSON_unbounded/test/cbmc/proofs/skipSpace/skipSpace_harness.c line 54 function harness
+        dead start;
+        // 89 file /local/home/lopha/Repos/coreJSON_unbounded/test/cbmc/proofs/skipSpace/skipSpace_harness.c line 54 function harness
+        dead buf;
+        // 90 file /local/home/lopha/Repos/coreJSON_unbounded/test/cbmc/proofs/skipSpace/skipSpace_harness.c line 54 function harness
+        END_FUNCTION
+
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+skipSpace /* skipSpace */
+        // 0 file /local/home/lopha/Repos/coreJSON_unbounded/test/cbmc/proofs/skipSpace/core_json.c line 74 function skipSpace
+        size_t i;
+        // 1 file /local/home/lopha/Repos/coreJSON_unbounded/test/cbmc/proofs/skipSpace/core_json.c line 76 function skipSpace
+        ASSERT buf != ((const char *)NULL) && start != ((size_t *)NULL) && max > (unsigned long int)0u // assertion ( buf != NULL ) && ( start != NULL ) && ( max > 0U )
+        // 2 file /local/home/lopha/Repos/coreJSON_unbounded/test/cbmc/proofs/skipSpace/core_json.c line 78 function skipSpace
+        i = *start;
+        // 3 file /local/home/lopha/Repos/coreJSON_unbounded/test/cbmc/proofs/skipSpace/core_json.c line 80 function skipSpace
+        __CPROVER_bool tmp_if_expr$32;
+        // 4 file /local/home/lopha/Repos/coreJSON_unbounded/test/cbmc/proofs/skipSpace/core_json.c line 80 function skipSpace
+        IF !(*start > max) THEN GOTO 1
+        // 5 file /local/home/lopha/Repos/coreJSON_unbounded/test/cbmc/proofs/skipSpace/core_json.c line 80 function skipSpace
+        tmp_if_expr$32 = i == *start ? TRUE : FALSE;
+        // 6 file /local/home/lopha/Repos/coreJSON_unbounded/test/cbmc/proofs/skipSpace/core_json.c line 80 function skipSpace
+        GOTO 2
+        // 7 file /local/home/lopha/Repos/coreJSON_unbounded/test/cbmc/proofs/skipSpace/core_json.c line 80 function skipSpace
+     1: tmp_if_expr$32 = FALSE;
+        // 8 file /local/home/lopha/Repos/coreJSON_unbounded/test/cbmc/proofs/skipSpace/core_json.c line 81 function skipSpace
+     2: __CPROVER_bool tmp_if_expr$33;
+        // 9 file /local/home/lopha/Repos/coreJSON_unbounded/test/cbmc/proofs/skipSpace/core_json.c line 81 function skipSpace
+        IF !tmp_if_expr$32 THEN GOTO 3
+        // 10 file /local/home/lopha/Repos/coreJSON_unbounded/test/cbmc/proofs/skipSpace/core_json.c line 81 function skipSpace
+        tmp_if_expr$33 = TRUE;
+        // 11 file /local/home/lopha/Repos/coreJSON_unbounded/test/cbmc/proofs/skipSpace/core_json.c line 81 function skipSpace
+        GOTO 4
+        // 12 file /local/home/lopha/Repos/coreJSON_unbounded/test/cbmc/proofs/skipSpace/core_json.c line 81 function skipSpace
+     3: tmp_if_expr$33 = (*start <= i ? (i <= max ? TRUE : FALSE) : FALSE) ? TRUE : FALSE;
+        // 13 file /local/home/lopha/Repos/coreJSON_unbounded/test/cbmc/proofs/skipSpace/core_json.c line 78 function skipSpace
+     4: ASSERT tmp_if_expr$33 // Check loop invariant before entry
+        // 14 file /local/home/lopha/Repos/coreJSON_unbounded/test/cbmc/proofs/skipSpace/core_json.c line 78 function skipSpace
+        tmp_if_expr = NONDET(__CPROVER_bool);
+        // 15 file /local/home/lopha/Repos/coreJSON_unbounded/test/cbmc/proofs/skipSpace/core_json.c line 78 function skipSpace
+        tmp_if_expr$0 = NONDET(__CPROVER_bool);
+        // 16 file /local/home/lopha/Repos/coreJSON_unbounded/test/cbmc/proofs/skipSpace/core_json.c line 78 function skipSpace
+        tmp_if_expr$1 = NONDET(__CPROVER_bool);
+        // 17 file /local/home/lopha/Repos/coreJSON_unbounded/test/cbmc/proofs/skipSpace/core_json.c line 78 function skipSpace
+        i = NONDET(size_t);
+        // 18 file /local/home/lopha/Repos/coreJSON_unbounded/test/cbmc/proofs/skipSpace/core_json.c line 80 function skipSpace
+        __CPROVER_bool tmp_if_expr$34;
+        // 19 file /local/home/lopha/Repos/coreJSON_unbounded/test/cbmc/proofs/skipSpace/core_json.c line 80 function skipSpace
+        IF !(*start > max) THEN GOTO 5
+        // 20 file /local/home/lopha/Repos/coreJSON_unbounded/test/cbmc/proofs/skipSpace/core_json.c line 80 function skipSpace
+        tmp_if_expr$34 = i == *start ? TRUE : FALSE;
+        // 21 file /local/home/lopha/Repos/coreJSON_unbounded/test/cbmc/proofs/skipSpace/core_json.c line 80 function skipSpace
+        GOTO 6
+        // 22 file /local/home/lopha/Repos/coreJSON_unbounded/test/cbmc/proofs/skipSpace/core_json.c line 80 function skipSpace
+     5: tmp_if_expr$34 = FALSE;
+        // 23 file /local/home/lopha/Repos/coreJSON_unbounded/test/cbmc/proofs/skipSpace/core_json.c line 81 function skipSpace
+     6: __CPROVER_bool tmp_if_expr$35;
+        // 24 file /local/home/lopha/Repos/coreJSON_unbounded/test/cbmc/proofs/skipSpace/core_json.c line 81 function skipSpace
+        IF !tmp_if_expr$34 THEN GOTO 7
+        // 25 file /local/home/lopha/Repos/coreJSON_unbounded/test/cbmc/proofs/skipSpace/core_json.c line 81 function skipSpace
+        tmp_if_expr$35 = TRUE;
+        // 26 file /local/home/lopha/Repos/coreJSON_unbounded/test/cbmc/proofs/skipSpace/core_json.c line 81 function skipSpace
+        GOTO 8
+        // 27 file /local/home/lopha/Repos/coreJSON_unbounded/test/cbmc/proofs/skipSpace/core_json.c line 81 function skipSpace
+     7: tmp_if_expr$35 = (*start <= i ? (i <= max ? TRUE : FALSE) : FALSE) ? TRUE : FALSE;
+        // 28 file /local/home/lopha/Repos/coreJSON_unbounded/test/cbmc/proofs/skipSpace/core_json.c line 78 function skipSpace
+     8: ASSUME tmp_if_expr$35
+        // 29 file /local/home/lopha/Repos/coreJSON_unbounded/test/cbmc/proofs/skipSpace/core_json.c line 78 function skipSpace
+        size_t tmp_cc;
+        // 30 file /local/home/lopha/Repos/coreJSON_unbounded/test/cbmc/proofs/skipSpace/core_json.c line 78 function skipSpace
+        tmp_cc = max - i; // Evaluate and store the loop variant before the loop
+        // 31 file /local/home/lopha/Repos/coreJSON_unbounded/test/cbmc/proofs/skipSpace/core_json.c line 78 function skipSpace
+        IF !(i < max) THEN GOTO 19
+        // 32 file /local/home/lopha/Repos/coreJSON_unbounded/test/cbmc/proofs/skipSpace/core_json.c line 85 function skipSpace
+        __CPROVER_bool tmp_if_expr;
+        // 33 file /local/home/lopha/Repos/coreJSON_unbounded/test/cbmc/proofs/skipSpace/core_json.c line 85 function skipSpace
+        IF !((signed int)buf[(signed long int)i] == 32) THEN GOTO 9
+        // 34 file /local/home/lopha/Repos/coreJSON_unbounded/test/cbmc/proofs/skipSpace/core_json.c line 85 function skipSpace
+        tmp_if_expr = TRUE;
+        // 35 file /local/home/lopha/Repos/coreJSON_unbounded/test/cbmc/proofs/skipSpace/core_json.c line 85 function skipSpace
+        GOTO 10
+        // 36 file /local/home/lopha/Repos/coreJSON_unbounded/test/cbmc/proofs/skipSpace/core_json.c line 85 function skipSpace
+     9: tmp_if_expr = (signed int)buf[(signed long int)i] == 9 ? TRUE : FALSE;
+        // 37 file /local/home/lopha/Repos/coreJSON_unbounded/test/cbmc/proofs/skipSpace/core_json.c line 85 function skipSpace
+    10: __CPROVER_bool tmp_if_expr$0;
+        // 38 file /local/home/lopha/Repos/coreJSON_unbounded/test/cbmc/proofs/skipSpace/core_json.c line 85 function skipSpace
+        IF !tmp_if_expr THEN GOTO 11
+        // 39 file /local/home/lopha/Repos/coreJSON_unbounded/test/cbmc/proofs/skipSpace/core_json.c line 85 function skipSpace
+        tmp_if_expr$0 = TRUE;
+        // 40 file /local/home/lopha/Repos/coreJSON_unbounded/test/cbmc/proofs/skipSpace/core_json.c line 85 function skipSpace
+        GOTO 12
+        // 41 file /local/home/lopha/Repos/coreJSON_unbounded/test/cbmc/proofs/skipSpace/core_json.c line 85 function skipSpace
+    11: tmp_if_expr$0 = (signed int)buf[(signed long int)i] == 10 ? TRUE : FALSE;
+        // 42 file /local/home/lopha/Repos/coreJSON_unbounded/test/cbmc/proofs/skipSpace/core_json.c line 85 function skipSpace
+    12: __CPROVER_bool tmp_if_expr$1;
+        // 43 file /local/home/lopha/Repos/coreJSON_unbounded/test/cbmc/proofs/skipSpace/core_json.c line 85 function skipSpace
+        IF !tmp_if_expr$0 THEN GOTO 13
+        // 44 file /local/home/lopha/Repos/coreJSON_unbounded/test/cbmc/proofs/skipSpace/core_json.c line 85 function skipSpace
+        tmp_if_expr$1 = TRUE;
+        // 45 file /local/home/lopha/Repos/coreJSON_unbounded/test/cbmc/proofs/skipSpace/core_json.c line 85 function skipSpace
+        GOTO 14
+        // 46 file /local/home/lopha/Repos/coreJSON_unbounded/test/cbmc/proofs/skipSpace/core_json.c line 85 function skipSpace
+    13: tmp_if_expr$1 = (signed int)buf[(signed long int)i] == 13 ? TRUE : FALSE;
+        // 47 file /local/home/lopha/Repos/coreJSON_unbounded/test/cbmc/proofs/skipSpace/core_json.c line 85 function skipSpace
+    14: IF !tmp_if_expr$1 THEN GOTO 19
+        // 48 file /local/home/lopha/Repos/coreJSON_unbounded/test/cbmc/proofs/skipSpace/core_json.c line 89 function skipSpace
+        dead tmp_if_expr$1;
+        // 49 file /local/home/lopha/Repos/coreJSON_unbounded/test/cbmc/proofs/skipSpace/core_json.c line 89 function skipSpace
+        dead tmp_if_expr$0;
+        // 50 file /local/home/lopha/Repos/coreJSON_unbounded/test/cbmc/proofs/skipSpace/core_json.c line 89 function skipSpace
+        dead tmp_if_expr;
+        // 51 file /local/home/lopha/Repos/coreJSON_unbounded/test/cbmc/proofs/skipSpace/core_json.c line 78 function skipSpace
+        i = i + 1ul;
+        // 52 file /local/home/lopha/Repos/coreJSON_unbounded/test/cbmc/proofs/skipSpace/core_json.c line 80 function skipSpace
+        __CPROVER_bool tmp_if_expr$36;
+        // 53 file /local/home/lopha/Repos/coreJSON_unbounded/test/cbmc/proofs/skipSpace/core_json.c line 80 function skipSpace
+        IF !(*start > max) THEN GOTO 15
+        // 54 file /local/home/lopha/Repos/coreJSON_unbounded/test/cbmc/proofs/skipSpace/core_json.c line 80 function skipSpace
+        tmp_if_expr$36 = i == *start ? TRUE : FALSE;
+        // 55 file /local/home/lopha/Repos/coreJSON_unbounded/test/cbmc/proofs/skipSpace/core_json.c line 80 function skipSpace
+        GOTO 16
+        // 56 file /local/home/lopha/Repos/coreJSON_unbounded/test/cbmc/proofs/skipSpace/core_json.c line 80 function skipSpace
+    15: tmp_if_expr$36 = FALSE;
+        // 57 file /local/home/lopha/Repos/coreJSON_unbounded/test/cbmc/proofs/skipSpace/core_json.c line 81 function skipSpace
+    16: __CPROVER_bool tmp_if_expr$37;
+        // 58 file /local/home/lopha/Repos/coreJSON_unbounded/test/cbmc/proofs/skipSpace/core_json.c line 81 function skipSpace
+        IF !tmp_if_expr$36 THEN GOTO 17
+        // 59 file /local/home/lopha/Repos/coreJSON_unbounded/test/cbmc/proofs/skipSpace/core_json.c line 81 function skipSpace
+        tmp_if_expr$37 = TRUE;
+        // 60 file /local/home/lopha/Repos/coreJSON_unbounded/test/cbmc/proofs/skipSpace/core_json.c line 81 function skipSpace
+        GOTO 18
+        // 61 file /local/home/lopha/Repos/coreJSON_unbounded/test/cbmc/proofs/skipSpace/core_json.c line 81 function skipSpace
+    17: tmp_if_expr$37 = (*start <= i ? (i <= max ? TRUE : FALSE) : FALSE) ? TRUE : FALSE;
+        // 62 file /local/home/lopha/Repos/coreJSON_unbounded/test/cbmc/proofs/skipSpace/core_json.c line 78 function skipSpace
+    18: ASSERT tmp_if_expr$37 // Check that loop invariant is preserved
+        // 63 file /local/home/lopha/Repos/coreJSON_unbounded/test/cbmc/proofs/skipSpace/core_json.c line 80 function skipSpace
+        size_t tmp_cc$0;
+        // 64 file /local/home/lopha/Repos/coreJSON_unbounded/test/cbmc/proofs/skipSpace/core_json.c line 80 function skipSpace
+        tmp_cc$0 = max - i; // Evaluate and store the loop variant after the loop
+        // 65 file /local/home/lopha/Repos/coreJSON_unbounded/test/cbmc/proofs/skipSpace/core_json.c line 80 function skipSpace
+        ASSERT tmp_cc$0 < tmp_cc // Compare the old and new variant values
+        // 66 file /local/home/lopha/Repos/coreJSON_unbounded/test/cbmc/proofs/skipSpace/core_json.c line 80 function skipSpace
+        dead tmp_cc;
+        // 67 file /local/home/lopha/Repos/coreJSON_unbounded/test/cbmc/proofs/skipSpace/core_json.c line 80 function skipSpace
+        dead tmp_cc$0;
+        // 68 file /local/home/lopha/Repos/coreJSON_unbounded/test/cbmc/proofs/skipSpace/core_json.c line 78 function skipSpace
+        ASSUME FALSE
+        // 69 file /local/home/lopha/Repos/coreJSON_unbounded/test/cbmc/proofs/skipSpace/core_json.c line 91 function skipSpace
+    19: *start = i;
+        // 70 file /local/home/lopha/Repos/coreJSON_unbounded/test/cbmc/proofs/skipSpace/core_json.c line 92 function skipSpace
+        dead i;
+        // 71 file /local/home/lopha/Repos/coreJSON_unbounded/test/cbmc/proofs/skipSpace/core_json.c line 92 function skipSpace
+        END_FUNCTION
+

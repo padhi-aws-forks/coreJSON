@@ -415,7 +415,7 @@ $(HARNESS_GOTO)1.goto: $(PROOF_GOTO)1.goto $(PROJECT_GOTO)2.goto
 $(HARNESS_GOTO)3.goto: $(HARNESS_GOTO)1.goto
 	$(LITANI) add-job \
 	  --command \
-	    '$(GOTO_INSTRUMENT) $(CBMC_VERBOSITY) --enforce-all-contracts $^ $@' \
+	    '$(GOTO_INSTRUMENT) $(CBMC_VERBOSITY) --enforce-all-contracts --apply-loop-contracts $^ $@' \
 	  --inputs $^ \
 	  --outputs $@ \
 	  --stdout-file $(LOGDIR)/code_contracts.txt \

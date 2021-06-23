@@ -46,7 +46,7 @@ void harness()
     __CPROVER_assume( buf != NULL );
 
     start = __CPROVER_max_malloc_size;
-    assert( max > SIZE_MAX - 6);
+    /*assert( max > SIZE_MAX - 6);*/
 
     ret = skipEscape( buf, &start, max );
 

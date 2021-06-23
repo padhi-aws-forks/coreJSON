@@ -11,3 +11,6 @@ build/
 *.gcda
 *.gcno
 *.gcov
+
+# Ignore VS code-related folders and files
+.vscode/
