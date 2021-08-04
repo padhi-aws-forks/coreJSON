@@ -80,7 +80,7 @@ static void skipSpace( const char * buf,
           ((*start > max) && (i == *start)) ||
           ((*start <= i) && (i <= max))
       )
-      __CPROVER_decreases((*start > max ? *start : max) - i)
+      __CPROVER_decreases(max - i)
     {
         if( !isspace_( buf[ i ] ) )
         {
@@ -717,7 +717,7 @@ static bool skipDigits( const char * buf,
           (-1 <= value) &&
           (value <= MAX_INDEX_VALUE)
       )
-      __CPROVER_decreases((*start > max ? *start : max) - i)
+      __CPROVER_decreases(max - i)
     {
         if( !isdigit_( buf[ i ] ) )
         {
@@ -960,7 +960,7 @@ static void skipArrayScalars( const char * buf,
     __CPROVER_loop_invariant(
         ((*start > max) && (i == *start)) || ((*start <= i) && (i <= max))
     )
-    __CPROVER_decreases((*start > max ? *start : max) - i)
+    __CPROVER_decreases(max - i)
     {
         if( skipAnyScalar( buf, &i, max ) != true )
         {
@@ -1016,7 +1016,7 @@ static void skipObjectScalars( const char * buf,
            is necessary for the termination proof of skipCollection. */
         ((old_start > max) && (i == old_start)) || ((old_start <= *start) && (*start <= i) && (i <= max))
     )
-    __CPROVER_decreases((old_start > max ? old_start : max) - i)
+    __CPROVER_decreases(max - i)
     {
         if( skipString( buf, &i, max ) != true )
         {
@@ -1132,7 +1132,7 @@ static JSONStatus_t skipCollection( const char * buf,
         /* The following line is necessary for proving lines 49 and 53 in skipCollection_harness.c. */
         skipCollectionEnum( ret ) && (ret == JSONSuccess ==> i <= max)
     )
-    __CPROVER_decreases((*start > max ? *start : max) - i)
+    __CPROVER_decreases(max - i)
     {
         c = buf[ i ];
         i++;
