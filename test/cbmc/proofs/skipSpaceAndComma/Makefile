@@ -4,12 +4,7 @@
 HARNESS_FILE=skipSpaceAndComma_harness
 PROOF_UID=skipSpaceAndComma
 
-# This value was experimentally chosen to provide 100% coverage
-# without tripping unwinding assertions and without exhausting memory.
-CBMC_MAX_BUFSIZE=10
-
-UNWINDSET += skipSpace.0:$(CBMC_MAX_BUFSIZE)
-UNWINDSET += skipSpaceAndComma.0:$(CBMC_MAX_BUFSIZE)
+APPLY_LOOP_CONTRACTS=1
 
 include ../Makefile-json.common
 

@@ -4,14 +4,10 @@
 HARNESS_FILE=skipNumber_harness
 PROOF_UID=skipNumber
 
-# This value was experimentally chosen to provide 100% coverage
-# without tripping unwinding assertions and without exhausting memory.
-CBMC_MAX_BUFSIZE=12
+# The SAT backend struggles with large integers
+CBMC_MAX_BUFSIZE=1000
 
-UNWINDSET += skipDecimals.0:$(CBMC_MAX_BUFSIZE)
-UNWINDSET += skipDigits.0:$(CBMC_MAX_BUFSIZE)
-UNWINDSET += skipExponent.0:$(CBMC_MAX_BUFSIZE)
-UNWINDSET += skipNumber.0:$(CBMC_MAX_BUFSIZE)
+APPLY_LOOP_CONTRACTS=1
 
 include ../Makefile-json.common
 

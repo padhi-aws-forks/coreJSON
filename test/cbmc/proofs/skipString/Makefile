@@ -4,15 +4,7 @@
 HARNESS_FILE=skipString_harness
 PROOF_UID=skipString
 
-# This value was experimentally chosen to provide 100% coverage
-# without tripping unwinding assertions and without exhausting memory.
-CBMC_MAX_BUFSIZE=14
-
-UNWINDSET += skipString.0:$(CBMC_MAX_BUFSIZE)
-
-PROOF_SOURCES += $(PROOF_STUB)/skipGeneric.c
-PROOF_SOURCES += $(PROOF_STUB)/skipEscape.c
-PROOF_SOURCES += $(PROOF_STUB)/skipUTF8.c
+APPLY_LOOP_CONTRACTS=1
 
 include ../Makefile-json.common
 

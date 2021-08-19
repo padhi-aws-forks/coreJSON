@@ -31,6 +31,14 @@
 #include <stdint.h>
 #include "core_json.h"
 
+#ifdef CBMC
+    #define INVARIANT( x ) __CPROVER_loop_invariant(x)
+    #define DECREASES( x ) __CPROVER_decreases(x)
+#else
+    #define INVARIANT( x ) 
+    #define DECREASES( x ) 
+#endif
+
 /** @cond DO_NOT_DOCUMENT */
 
 /* A compromise to satisfy both MISRA and CBMC */
@@ -76,6 +84,10 @@ static void skipSpace( const char * buf,
     assert( ( buf != NULL ) && ( start != NULL ) && ( max > 0U ) );
 
     for( i = *start; i < max; i++ )
+    INVARIANT (
+        ((*start > max) && (i == *start)) || ((*start <= i) && (i <= max))
+    )
+    DECREASES ( max - i )
     {
         if( !isspace_( buf[ i ] ) )
         {
@@ -100,6 +112,12 @@ static size_t countHighBits( uint8_t c )
     size_t i = 0;
 
     while( ( n & 0x80U ) != 0U )
+    INVARIANT (
+        (0U <= i) && (i <= 8U) &&
+        (n == (c & (0xFF >> i)) << i) &&
+        (((c >> (8U - i)) + 1U) == (1U << i))
+    )
+    DECREASES ( 8U - i )
     {
         i++;
         n = ( n & 0x7FU ) << 1U;
@@ -208,6 +226,12 @@ static bool skipUTF8MultiByte( const char * buf,
         /* The bit count is 1 greater than the number of bytes,
          * e.g., when j is 2, we skip one more byte. */
         for( j = bitCount - 1U; j > 0U; j-- )
+        INVARIANT (
+            (0 <= j) && (j <= bitCount - 1) &&
+            (*start <= i) && (i <= max) &&
+            (i == max ==> j > 0)
+        )
+        DECREASES ( j )
         {
             i++;
 
@@ -340,6 +364,11 @@ static bool skipOneHexEscape( const char * buf,
     if( ( end < max ) && ( buf[ i ] == '\\' ) && ( buf[ i + 1U ] == 'u' ) )
     {
         for( i += 2U; i < end; i++ )
+        INVARIANT (
+            (((*start + 2 > end) && (i == *start + 2)) || ((*start + 2 <= i) && (i <= end))) &&
+             (0 <= value) && (value < (1 << (4 * (i - (2 + *start)))))
+        )
+        DECREASES ( end - i )
         {
             uint8_t n = hexToInt( buf[ i ] );
 
@@ -517,6 +546,8 @@ static bool skipString( const char * buf,
         i++;
 
         while( i < max )
+        INVARIANT ( (*start <= i) && (i <= max) )
+        /* DECREASES ( max - i ) */
         {
             if( buf[ i ] == '"' )
             {
@@ -575,6 +606,8 @@ static bool strnEq( const char * a,
     assert( ( a != NULL ) && ( b != NULL ) );
 
     for( i = 0; i < n; i++ )
+    INVARIANT (0 <= i && i <= n)
+    DECREASES (n - i)
     {
         if( a[ i ] != b[ i ] )
         {
@@ -678,6 +711,11 @@ static bool skipDigits( const char * buf,
     saveStart = *start;
 
     for( i = *start; i < max; i++ )
+    INVARIANT (
+        (((*start > max) && (i == *start)) || ((*start <= i) && (i <= max))) &&
+        (-1 <= value) && (value <= MAX_INDEX_VALUE)
+    )
+    DECREASES ( max - i )
     {
         if( !isdigit_( buf[ i ] ) )
         {
@@ -917,6 +955,10 @@ static void skipArrayScalars( const char * buf,
     i = *start;
 
     while( i < max )
+    INVARIANT (
+        ((*start > max) && (i == *start)) || ((*start <= i) && (i <= max))
+    )
+    DECREASES ( max - i )
     {
         if( skipAnyScalar( buf, &i, max ) != true )
         {
@@ -956,9 +998,14 @@ static void skipObjectScalars( const char * buf,
 
     assert( ( buf != NULL ) && ( start != NULL ) && ( max > 0U ) );
 
+    size_t old_start = *start; /* Can be replaced by __CPROVER_loop_entry(*start) soon */
     i = *start;
 
     while( i < max )
+    INVARIANT (
+        ((old_start > max) && (i == old_start)) || ((old_start <= *start) && (*start <= i) && (i <= max))
+    )
+    DECREASES ( max - i )
     {
         if( skipString( buf, &i, max ) != true )
         {
@@ -1055,6 +1102,19 @@ static JSONStatus_t skipCollection( const char * buf,
     i = *start;
 
     while( i < max )
+    INVARIANT (
+        (((*start > max) && (i == *start)) || ((*start <= i) && (i <= max))) &&
+        (-1 <= depth) && (depth <= JSON_MAX_DEPTH) &&
+        ((i < max && (buf[i] == '[' || buf[i] == ']' || buf[i] == '{' || buf[i] == '}')) ==> depth < JSON_MAX_DEPTH) &&
+        (depth == JSON_MAX_DEPTH ==> ret == JSONMaxDepthExceeded) &&
+        __CPROVER_forall {
+            int k;
+            (0 <= k && k < JSON_MAX_DEPTH) ==> ((k <= depth) ==> (stack[k] == '[' || stack[k] == '{'))
+        } &&
+        (ret == JSONSuccess || ret == JSONPartial || ret == JSONIllegalDocument || ret == JSONMaxDepthExceeded ) &&
+        (ret == JSONSuccess ==> i <= max)
+    )
+    /* DECREASES ( max - i ) */
     {
         c = buf[ i ];
         i++;
@@ -1149,6 +1209,7 @@ JSONStatus_t JSON_Validate( const char * buf,
         /** @endcond */
         {
             ret = skipCollection( buf, &i, max );
+            assert (ret != JSONNotFound );
         }
     }
 
@@ -1329,6 +1390,8 @@ static bool objectSearch( const char * buf,
         skipSpace( buf, &i, max );
 
         while( i < max )
+        INVARIANT ( i <= max )
+        DECREASES ( max - i )
         {
             if( nextKeyValuePair( buf, &i, max, &key, &keyLength,
                                   &value, &valueLength ) != true )
@@ -1396,6 +1459,8 @@ static bool arraySearch( const char * buf,
         skipSpace( buf, &i, max );
 
         while( i < max )
+        INVARIANT ( i <= max )
+        DECREASES ( max - i )
         {
             if( nextValue( buf, &i, max, &value, &valueLength ) != true )
             {

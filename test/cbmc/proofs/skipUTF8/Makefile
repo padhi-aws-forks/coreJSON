@@ -4,13 +4,7 @@
 HARNESS_FILE=skipUTF8_harness
 PROOF_UID=skipUTF8
 
-# This value was experimentally chosen to provide 100% coverage
-# without tripping unwinding assertions and without exhausting memory.
-CBMC_MAX_BUFSIZE=10
-
-UNWINDSET += countHighBits.0:9
-UNWINDSET += skipUTF8.0:$(CBMC_MAX_BUFSIZE)
-UNWINDSET += skipUTF8MultiByte.0:$(CBMC_MAX_BUFSIZE)
+APPLY_LOOP_CONTRACTS=1
 
 include ../Makefile-json.common
 

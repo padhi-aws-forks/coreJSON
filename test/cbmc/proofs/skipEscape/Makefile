@@ -4,13 +4,7 @@
 HARNESS_FILE=skipEscape_harness
 PROOF_UID=skipEscape
 
-# This value was experimentally chosen to provide 100% coverage
-# without tripping unwinding assertions and without exhausting memory.
-CBMC_MAX_BUFSIZE=14
-
-UNWINDSET += skipEscape.0:$(CBMC_MAX_BUFSIZE)
-UNWINDSET += skipHexEscape.0:$(CBMC_MAX_BUFSIZE)
-UNWINDSET += skipOneHexEscape.0:$(CBMC_MAX_BUFSIZE)
+APPLY_LOOP_CONTRACTS=1
 
 include ../Makefile-json.common
 

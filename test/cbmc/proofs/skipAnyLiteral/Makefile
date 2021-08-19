@@ -4,13 +4,7 @@
 HARNESS_FILE=skipAnyLiteral_harness
 PROOF_UID=skipAnyLiteral
 
-# This value was experimentally chosen to provide 100% coverage
-# without tripping unwinding assertions and without exhausting memory.
-CBMC_MAX_BUFSIZE=6
-
-UNWINDSET += skipAnyLiteral.0:$(CBMC_MAX_BUFSIZE)
-UNWINDSET += skipLiteral.0:$(CBMC_MAX_BUFSIZE)
-UNWINDSET += strnEq.0:$(CBMC_MAX_BUFSIZE)
+APPLY_LOOP_CONTRACTS=1
 
 include ../Makefile-json.common
 
