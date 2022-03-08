@@ -31,6 +31,14 @@
 #include <stdint.h>
 #include "core_json.h"
 
+#ifdef CBMC
+    #define INVARIANT( x ) __CPROVER_loop_invariant (x)
+    #define DECREASES( x ) __CPROVER_decreases (x)
+#else
+    #define INVARIANT( x ) 
+    #define DECREASES( x ) 
+#endif
+
 /** @cond DO_NOT_DOCUMENT */
 
 /* A compromise to satisfy both MISRA and CBMC */
@@ -76,6 +84,8 @@ static void skipSpace( const char * buf,
     assert( ( buf != NULL ) && ( start != NULL ) && ( max > 0U ) );
 
     for( i = *start; i < max; i++ )
+    INVARIANT ((*start <= i) && (i <= max))
+    DECREASES ( max - i )
     {
         if( !isspace_( buf[ i ] ) )
         {
@@ -100,6 +110,12 @@ static size_t countHighBits( uint8_t c )
     size_t i = 0;
 
     while( ( n & 0x80U ) != 0U )
+    INVARIANT (
+        (0U <= i) && (i <= 8U) &&
+        (n == (c & (0xFF >> i)) << i) &&
+        (((c >> (8U - i)) + 1U) == (1U << i))
+    )
+    DECREASES ( 8U - i )
     {
         i++;
         n = ( n & 0x7FU ) << 1U;
@@ -208,6 +224,12 @@ static bool skipUTF8MultiByte( const char * buf,
         /* The bit count is 1 greater than the number of bytes,
          * e.g., when j is 2, we skip one more byte. */
         for( j = bitCount - 1U; j > 0U; j-- )
+        INVARIANT (
+            (0 <= j) && (j <= bitCount - 1) &&
+            (*start <= i) && (i <= max) &&
+            (i == max ==> j > 0)
+        )
+        DECREASES ( j )
         {
             i++;
 
@@ -340,6 +362,11 @@ static bool skipOneHexEscape( const char * buf,
     if( ( end < max ) && ( buf[ i ] == '\\' ) && ( buf[ i + 1U ] == 'u' ) )
     {
         for( i += 2U; i < end; i++ )
+        INVARIANT (
+            (*start + 2 <= i) && (i <= end) &&
+            (0 <= value) && (value < (1 << (4 * (i - (2 + *start)))))
+        )
+        DECREASES ( end - i )
         {
             uint8_t n = hexToInt( buf[ i ] );
 
@@ -517,6 +544,9 @@ static bool skipString( const char * buf,
         i++;
 
         while( i < max )
+        __CPROVER_assigns ( i, ret )
+        INVARIANT ( (*start <= i) && (i <= max) )
+        DECREASES ( max - i )
         {
             if( buf[ i ] == '"' )
             {
@@ -575,6 +605,8 @@ static bool strnEq( const char * a,
     assert( ( a != NULL ) && ( b != NULL ) );
 
     for( i = 0; i < n; i++ )
+    INVARIANT (0 <= i && i <= n)
+    DECREASES (n - i)
     {
         if( a[ i ] != b[ i ] )
         {
@@ -678,6 +710,11 @@ static bool skipDigits( const char * buf,
     saveStart = *start;
 
     for( i = *start; i < max; i++ )
+    INVARIANT (
+        (*start <= i) && (i <= max) &&
+        (-1 <= value) && (value <= MAX_INDEX_VALUE)
+    )
+    DECREASES ( max - i )
     {
         if( !isdigit_( buf[ i ] ) )
         {

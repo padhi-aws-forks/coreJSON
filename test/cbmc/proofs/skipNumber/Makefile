@@ -4,14 +4,18 @@
 HARNESS_FILE=skipNumber_harness
 PROOF_UID=skipNumber
 
+CBMC_FLAG_UNWINDING_ASSERTIONS = 
+
+APPLY_LOOP_CONTRACTS = 1
+
 # This value was experimentally chosen to provide 100% coverage
 # without tripping unwinding assertions and without exhausting memory.
-CBMC_MAX_BUFSIZE=12
+CBMC_MAX_BUFSIZE=10000
 
-UNWINDSET += skipDecimals.0:$(CBMC_MAX_BUFSIZE)
-UNWINDSET += skipDigits.0:$(CBMC_MAX_BUFSIZE)
-UNWINDSET += skipExponent.0:$(CBMC_MAX_BUFSIZE)
-UNWINDSET += skipNumber.0:$(CBMC_MAX_BUFSIZE)
+# UNWINDSET += skipDecimals.0:$(CBMC_MAX_BUFSIZE)
+# UNWINDSET += skipDigits.0:$(CBMC_MAX_BUFSIZE)
+# UNWINDSET += skipExponent.0:$(CBMC_MAX_BUFSIZE)
+# UNWINDSET += skipNumber.0:$(CBMC_MAX_BUFSIZE)
 
 include ../Makefile-json.common
 
