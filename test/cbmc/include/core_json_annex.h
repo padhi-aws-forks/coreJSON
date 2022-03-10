@@ -106,4 +106,10 @@ JSONStatus_t skipCollection( const char * buf,
                              size_t * start,
                              size_t max );
 
+size_t countHighBits( uint8_t c );
+
+bool skipOneHexEscape( const char * buf,
+                              size_t * start,
+                              size_t max,
+                              uint16_t * outValue );
 #endif /* ifndef CORE_JSON_ANNEX_H_ */

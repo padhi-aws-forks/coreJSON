@@ -1,0 +1,7 @@
+{ "expected-missing-functions":
+  [
+
+  ],
+  "proof-name": "skipOneHexEscape",
+  "proof-root": "test/cbmc/proofs"
+}

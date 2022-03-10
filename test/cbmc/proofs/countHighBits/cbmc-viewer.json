@@ -1,0 +1,7 @@
+{ "expected-missing-functions":
+  [
+
+  ],
+  "proof-name": "countHighBits",
+  "proof-root": "test/cbmc/proofs"
+}
